@@ -1,0 +1,220 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global default-deny safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Reusable hardened helpers
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerifiedUser() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isVerifiedUser() &&
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isValidUserProfile(data, userId) {
+      return data.keys().hasAll(['uid', 'displayName', 'email', 'academicYear', 'createdAt', 'updatedAt']) &&
+        data.keys().hasOnly([
+          'uid', 'displayName', 'email', 'institution', 'course', 'branch',
+          'academicYear', 'graduationYear', 'skills', 'interests',
+          'preferredCategories', 'preferredMode', 'locationPreference',
+          'createdAt', 'updatedAt'
+        ]) &&
+        data.uid == userId &&
+        data.displayName is string && data.displayName.size() >= 1 && data.displayName.size() <= 120 &&
+        data.email is string && data.email.size() >= 3 && data.email.size() <= 200 &&
+        data.academicYear is int && data.academicYear >= 1 && data.academicYear <= 6 &&
+        (!('institution' in data) || (data.institution is string && data.institution.size() <= 200)) &&
+        (!('course' in data) || (data.course is string && data.course.size() <= 120)) &&
+        (!('branch' in data) || (data.branch is string && data.branch.size() <= 120)) &&
+        (!('skills' in data) || (data.skills is list && data.skills.size() <= 25)) &&
+        (!('interests' in data) || (data.interests is list && data.interests.size() <= 20)) &&
+        (!('preferredCategories' in data) || (data.preferredCategories is list && data.preferredCategories.size() <= 10)) &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidOpportunity(data, oppId) {
+      return data.keys().hasAll([
+          'id', 'title', 'organisation', 'category', 'description',
+          'registrationDeadline', 'mode', 'verificationStatus', 'createdAt', 'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'id', 'title', 'organisation', 'category', 'description', 'objectives',
+          'eligibility', 'academicRequirements', 'eligibleYears', 'requiredSkills',
+          'registrationDeadline', 'eventStartDate', 'eventEndDate', 'mode',
+          'location', 'registrationFee', 'rewards', 'benefits',
+          'applicationProcedure', 'registrationUrl', 'contactEmail', 'tags',
+          'source', 'isSampleData', 'verificationStatus', 'createdAt', 'updatedAt'
+        ]) &&
+        data.id == oppId &&
+        data.title is string && data.title.size() >= 2 && data.title.size() <= 200 &&
+        data.organisation is string && data.organisation.size() >= 2 && data.organisation.size() <= 200 &&
+        data.category is string && data.category.size() <= 60 &&
+        data.description is string && data.description.size() <= 4000 &&
+        data.registrationDeadline is string && data.registrationDeadline.size() <= 40 &&
+        data.mode in ['Online', 'Offline', 'Hybrid'] &&
+        data.verificationStatus in ['Verified', 'Unverified', 'Pending Review', 'Archived'] &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidUserOpportunity(data, recordId) {
+      return data.keys().hasAll(['id', 'userId', 'opportunityId', 'status', 'savedAt', 'updatedAt']) &&
+        data.keys().hasOnly(['id', 'userId', 'opportunityId', 'status', 'notes', 'reminderDate', 'savedAt', 'updatedAt']) &&
+        data.id == recordId &&
+        data.userId == request.auth.uid &&
+        isValidId(data.opportunityId) &&
+        data.status in ['Saved', 'Interested', 'Applied', 'Shortlisted', 'Completed', 'Archived'] &&
+        (!('notes' in data) || (data.notes is string && data.notes.size() <= 2000)) &&
+        data.savedAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidScan(data, scanId) {
+      return data.keys().hasAll(['id', 'userId', 'fileName', 'extractedData', 'status', 'createdAt']) &&
+        data.keys().hasOnly(['id', 'userId', 'fileName', 'mimeType', 'extractedData', 'status', 'createdAt']) &&
+        data.id == scanId &&
+        data.userId == request.auth.uid &&
+        data.fileName is string && data.fileName.size() <= 255 &&
+        data.extractedData is map &&
+        data.status in ['Reviewed', 'Saved to Catalog', 'Discarded'] &&
+        data.createdAt is timestamp;
+    }
+
+    function isValidNotification(data, notifId) {
+      return data.keys().hasAll(['id', 'userId', 'title', 'message', 'type', 'read', 'createdAt']) &&
+        data.keys().hasOnly(['id', 'userId', 'title', 'message', 'type', 'opportunityId', 'read', 'createdAt']) &&
+        data.id == notifId &&
+        data.userId == request.auth.uid &&
+        data.title is string && data.title.size() <= 160 &&
+        data.message is string && data.message.size() <= 500 &&
+        data.type in ['deadline', 'saved', 'status', 'recommendation', 'system'] &&
+        data.read is bool &&
+        data.createdAt is timestamp;
+    }
+
+    // Trusted admin roster (read-only from client; provisioned via Admin SDK / Console)
+    match /admins/{adminUid} {
+      allow get: if isSignedIn() && request.auth.uid == adminUid;
+      allow list, write: if false;
+    }
+
+    // Student private profiles (strict owner isolation; no listing across users)
+    match /users/{userId} {
+      allow get: if isValidId(userId) && (isOwner(userId) || isAdmin());
+      allow list: if false;
+      allow create: if isValidId(userId) && isVerifiedUser() && isOwner(userId) &&
+        isValidUserProfile(incoming(), userId) &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time;
+      allow update: if isValidId(userId) && isVerifiedUser() && isOwner(userId) &&
+        isValidUserProfile(incoming(), userId) &&
+        incoming().uid == existing().uid &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time &&
+        incoming().diff(existing()).affectedKeys().hasOnly([
+          'displayName', 'institution', 'course', 'branch', 'academicYear',
+          'graduationYear', 'skills', 'interests', 'preferredCategories',
+          'preferredMode', 'locationPreference', 'updatedAt'
+        ]);
+      allow delete: if false;
+    }
+
+    // Globally visible opportunities (writes restricted to verified admins)
+    match /opportunities/{opportunityId} {
+      allow get: if isValidId(opportunityId);
+      allow list: if resource.data.verificationStatus != 'Archived' || isAdmin();
+      allow create: if isValidId(opportunityId) && isAdmin() &&
+        isValidOpportunity(incoming(), opportunityId) &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time;
+      allow update: if isValidId(opportunityId) && isAdmin() &&
+        isValidOpportunity(incoming(), opportunityId) &&
+        incoming().id == existing().id &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time;
+      allow delete: if isValidId(opportunityId) && isAdmin();
+    }
+
+    // Student saved/tracked opportunity records
+    match /userOpportunities/{recordId} {
+      allow get: if isValidId(recordId) && isSignedIn() && resource.data.userId == request.auth.uid;
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isValidId(recordId) && isVerifiedUser() &&
+        isValidUserOpportunity(incoming(), recordId) &&
+        exists(/databases/$(database)/documents/opportunities/$(incoming().opportunityId)) &&
+        incoming().savedAt == request.time &&
+        incoming().updatedAt == request.time;
+      allow update: if isValidId(recordId) && isVerifiedUser() &&
+        existing().userId == request.auth.uid &&
+        isValidUserOpportunity(incoming(), recordId) &&
+        incoming().id == existing().id &&
+        incoming().userId == existing().userId &&
+        incoming().opportunityId == existing().opportunityId &&
+        incoming().savedAt == existing().savedAt &&
+        incoming().updatedAt == request.time &&
+        incoming().diff(existing()).affectedKeys().hasOnly(['status', 'notes', 'reminderDate', 'updatedAt']);
+      allow delete: if isValidId(recordId) && isSignedIn() && existing().userId == request.auth.uid;
+    }
+
+    // Student poster scan records
+    match /scans/{scanId} {
+      allow get: if isValidId(scanId) && isSignedIn() && resource.data.userId == request.auth.uid;
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isValidId(scanId) && isVerifiedUser() &&
+        isValidScan(incoming(), scanId) &&
+        incoming().createdAt == request.time;
+      allow update: if isValidId(scanId) && isVerifiedUser() &&
+        existing().userId == request.auth.uid &&
+        isValidScan(incoming(), scanId) &&
+        incoming().id == existing().id &&
+        incoming().userId == existing().userId &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().diff(existing()).affectedKeys().hasOnly(['status', 'extractedData']);
+      allow delete: if isValidId(scanId) && isSignedIn() && existing().userId == request.auth.uid;
+    }
+
+    // Student notifications
+    match /notifications/{notificationId} {
+      allow get: if isValidId(notificationId) && isSignedIn() && resource.data.userId == request.auth.uid;
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isValidId(notificationId) && isVerifiedUser() &&
+        isValidNotification(incoming(), notificationId) &&
+        incoming().createdAt == request.time;
+      allow update: if isValidId(notificationId) && isVerifiedUser() &&
+        existing().userId == request.auth.uid &&
+        isValidNotification(incoming(), notificationId) &&
+        incoming().id == existing().id &&
+        incoming().userId == existing().userId &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().diff(existing()).affectedKeys().hasOnly(['read']);
+      allow delete: if isValidId(notificationId) && isSignedIn() && existing().userId == request.auth.uid;
+    }
+  }
+}

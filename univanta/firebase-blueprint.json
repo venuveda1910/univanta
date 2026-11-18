@@ -1,0 +1,119 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "Student Profile",
+      "description": "Private profile and academic preferences for an authenticated Univanta student.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "email": { "type": "string", "format": "email", "maxLength": 200 },
+        "institution": { "type": "string", "maxLength": 200 },
+        "course": { "type": "string", "maxLength": 120 },
+        "branch": { "type": "string", "maxLength": 120 },
+        "academicYear": { "type": "integer" },
+        "graduationYear": { "type": "integer" },
+        "skills": { "type": "array", "description": "Up to 25 student skills" },
+        "interests": { "type": "array", "description": "Up to 20 student interests" },
+        "preferredCategories": { "type": "array", "description": "Up to 10 preferred categories" },
+        "preferredMode": { "type": "string", "enum": ["Online", "Offline", "Hybrid", "Any"] },
+        "locationPreference": { "type": "string", "maxLength": 150 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "displayName", "email", "academicYear", "createdAt", "updatedAt"]
+    },
+    "Opportunity": {
+      "title": "Student Opportunity",
+      "description": "Global opportunity listing such as a hackathon, internship, scholarship, or workshop.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "title": { "type": "string", "minLength": 2, "maxLength": 200 },
+        "organisation": { "type": "string", "minLength": 2, "maxLength": 200 },
+        "category": { "type": "string", "maxLength": 60 },
+        "description": { "type": "string", "maxLength": 4000 },
+        "eligibility": { "type": "string", "maxLength": 2000 },
+        "requiredSkills": { "type": "array" },
+        "registrationDeadline": { "type": "string", "maxLength": 40 },
+        "eventStartDate": { "type": "string", "maxLength": 40 },
+        "eventEndDate": { "type": "string", "maxLength": 40 },
+        "mode": { "type": "string", "enum": ["Online", "Offline", "Hybrid"] },
+        "location": { "type": "string", "maxLength": 200 },
+        "registrationUrl": { "type": "string", "maxLength": 500 },
+        "rewards": { "type": "string", "maxLength": 500 },
+        "source": { "type": "string", "maxLength": 100 },
+        "verificationStatus": { "type": "string", "enum": ["Verified", "Unverified", "Pending Review", "Archived"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "organisation", "category", "description", "registrationDeadline", "mode", "verificationStatus", "createdAt", "updatedAt"]
+    },
+    "UserOpportunity": {
+      "title": "Saved & Tracked Opportunity",
+      "description": "Per-student tracking record linking a student to an opportunity with status and personal notes.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "opportunityId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "status": { "type": "string", "enum": ["Saved", "Interested", "Applied", "Shortlisted", "Completed", "Archived"] },
+        "notes": { "type": "string", "maxLength": 2000 },
+        "savedAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "opportunityId", "status", "savedAt", "updatedAt"]
+    },
+    "PosterScan": {
+      "title": "Poster Scan Record",
+      "description": "Structured extraction result from an uploaded poster or PDF processed by Gemini.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "fileName": { "type": "string", "maxLength": 255 },
+        "extractedData": { "type": "object" },
+        "status": { "type": "string", "enum": ["Reviewed", "Saved to Catalog", "Discarded"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "fileName", "extractedData", "status", "createdAt"]
+    },
+    "Notification": {
+      "title": "In-App Notification",
+      "description": "User-scoped notification for approaching deadlines and application milestones.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "title": { "type": "string", "maxLength": 160 },
+        "message": { "type": "string", "maxLength": 500 },
+        "type": { "type": "string", "enum": ["deadline", "saved", "status", "recommendation", "system"] },
+        "read": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "title", "message", "type", "read", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Private student profile documents strictly readable/writable only by the owning authenticated student."
+    },
+    "/opportunities/{opportunityId}": {
+      "schema": { "$ref": "#/entities/Opportunity" },
+      "description": "Globally discoverable opportunity records managed by verified administrators."
+    },
+    "/userOpportunities/{recordId}": {
+      "schema": { "$ref": "#/entities/UserOpportunity" },
+      "description": "Private student application tracking records scoped by userId."
+    },
+    "/scans/{scanId}": {
+      "schema": { "$ref": "#/entities/PosterScan" },
+      "description": "Private poster scan history records scoped by userId."
+    },
+    "/notifications/{notificationId}": {
+      "schema": { "$ref": "#/entities/Notification" },
+      "description": "Private student notification records scoped by userId."
+    }
+  }
+}

@@ -1,0 +1,892 @@
+You are an expert full-stack software engineer, AI engineer, product designer, UX architect and hackathon mentor. Your task is to DESIGN, BUILD, TEST and DOCUMENT a complete, functional, original, production-minded web application called CAMPUSCOMPASS.
+
+IMPORTANT: This is a one-shot development instruction. The user may not be able to provide additional development prompts. Make sensible technical decisions independently, complete as much as possible, and do not stop after producing a visual prototype or a landing page.
+
+==================================================
+1. PRODUCT VISION AND IDENTITY
+==================================================
+
+PRODUCT NAME: CampusCompass
+
+TAGLINE: Discover opportunities. Unlock your potential.
+
+PRODUCT CATEGORY: AI-powered student opportunity discovery and management platform.
+
+CORE PROBLEM:
+Students frequently miss valuable opportunities because information is scattered across college notices, social media, posters, websites, messaging groups and emails. They struggle to identify relevant opportunities, understand eligibility criteria, remember deadlines and organise applications.
+
+OUR SOLUTION:
+CampusCompass creates a central intelligent platform that helps students discover opportunities, understand event information, evaluate their eligibility and track applications.
+
+TARGET USERS:
+- College and university students.
+- Students searching for hackathons and coding competitions.
+- Students looking for internships and scholarships.
+- Students interested in workshops, conferences and volunteering.
+- Students seeking academic and extracurricular development.
+
+OPPORTUNITY CATEGORIES:
+- Hackathons.
+- Internships.
+- Scholarships.
+- Coding competitions.
+- Workshops.
+- Volunteering.
+- Conferences.
+- Research opportunities.
+- Other student development opportunities.
+
+ORIGINALITY REQUIREMENT:
+Create an original product identity, layout, component system, interactions and visual language.
+Do not clone existing opportunity platforms, event websites or SaaS dashboards.
+Do not reproduce any existing company's logo, branding or exact interface.
+The product should have a distinct identity and a clear reason to exist.
+
+==================================================
+2. VISUAL DESIGN AND USER EXPERIENCE
+==================================================
+
+Create a premium, professional, modern SaaS application suitable for a national-level hackathon demonstration.
+
+VISUAL IDENTITY:
+- Primary colour: deep cobalt blue.
+- Secondary colour: midnight navy.
+- Background: clean white and subtle cool-grey.
+- Accent: restrained cyan or soft violet for selected highlights.
+- Text: dark navy with accessible contrast.
+- Use consistent colour tokens throughout the application.
+
+DESIGN CHARACTER:
+- Modern, clean, intelligent and trustworthy.
+- Premium dashboard aesthetic.
+- Excellent whitespace and visual hierarchy.
+- Beautiful typography.
+- Rounded cards with restrained shadows.
+- Smooth but subtle transitions.
+- Clear navigation and feedback.
+- Consistent iconography using Lucide.
+- Original compass-inspired geometric brand mark.
+- Professional illustrations or original CSS/SVG graphics where useful.
+- No cluttered layouts.
+- No excessive gradients.
+- No unnecessary glassmorphism.
+- No generic AI-generated template appearance.
+
+RESPONSIVENESS:
+The entire application must work on:
+- Desktop.
+- Laptop.
+- Tablet.
+- Mobile phones.
+
+Use accessible typography, keyboard-friendly navigation, visible focus indicators, semantic HTML, labelled forms and sufficient colour contrast.
+
+Create proper:
+- Loading states.
+- Empty states.
+- Error states.
+- Success notifications.
+- Confirmation dialogs.
+- Form validation.
+- Tooltips where appropriate.
+
+==================================================
+3. TECHNICAL ARCHITECTURE
+==================================================
+
+Inspect the existing environment first. Preserve the working project setup wherever possible.
+
+PREFERRED STACK:
+Frontend:
+- React.
+- TypeScript.
+- Vite if appropriate for the environment.
+- Tailwind CSS.
+- Lucide React icons.
+- React Router or an equivalent routing solution.
+
+Backend:
+- Secure server-side Node.js functionality.
+- Firebase Authentication.
+- Cloud Firestore.
+- Firebase Storage if available and necessary.
+
+AI:
+- Google Gemini API.
+- Use a currently supported Gemini model available to the account.
+- Call Gemini only from a secure server-side environment.
+- Never expose the Gemini API key in browser code.
+- Never commit secrets to GitHub.
+
+Deployment:
+- Ensure compatibility with a supported deployment environment.
+- Document deployment requirements.
+
+CODE QUALITY:
+- Modular architecture.
+- Reusable components.
+- Typed interfaces.
+- Centralised data handling.
+- Consistent error handling.
+- Clear separation of frontend, backend and services.
+- Maintainable folder structure.
+- No unnecessary dependencies.
+- No giant single-file application.
+- Avoid duplicated code.
+- Avoid placeholder buttons.
+- No hardcoded secrets.
+
+If a particular integration requires user credentials, implement its complete integration code and provide a clear setup guide. Do not fabricate successful authentication or database connections.
+
+==================================================
+4. APPLICATION ROUTES AND NAVIGATION
+==================================================
+
+Create these functional routes:
+
+/                    Landing page
+/login               Login
+/signup              Registration
+/dashboard           Student dashboard
+/discover            Opportunity discovery
+/opportunity/:id     Opportunity details
+/scanner             AI poster scanner
+/eligibility         Eligibility matcher
+/deadlines           Deadline radar
+/my-opportunities    Saved and tracked opportunities
+/profile             Student profile
+/settings            Application settings
+/admin               Administrative management, protected by role
+
+Use a consistent responsive sidebar on desktop and appropriate mobile navigation.
+
+Show the active route clearly.
+
+==================================================
+5. LANDING PAGE
+==================================================
+
+Build a compelling public landing page.
+
+Include:
+- Original CampusCompass logo.
+- Navigation.
+- Hero headline: "Your next opportunity starts here."
+- Supporting description explaining the problem and solution.
+- Primary CTA: Explore Opportunities.
+- Secondary CTA: Discover How It Works.
+- Visually impressive product dashboard preview.
+- Feature highlights.
+- How it works section.
+- Opportunity categories.
+- AI-powered functionality section.
+- Benefits for students.
+- Final call to action.
+- Footer with About, Features, Privacy and Contact links.
+
+The landing page should immediately communicate what the product does and why students need it.
+
+==================================================
+6. AUTHENTICATION AND STUDENT PROFILE
+==================================================
+
+Implement Firebase Authentication where configuration is available.
+
+Features:
+- Email registration.
+- Email login.
+- Google sign-in if Firebase OAuth configuration supports it.
+- Logout.
+- Protected student routes.
+- Session persistence.
+- Form validation.
+- Clear authentication errors.
+
+Create a student profile containing:
+- Display name.
+- Email.
+- Institution.
+- Degree or course.
+- Branch or department.
+- Current academic year.
+- Graduation year.
+- Skills.
+- Interests.
+- Preferred categories.
+- Preferred opportunity mode.
+- Optional location preference.
+
+Students should be able to edit and update their profiles.
+
+Privacy:
+- Only collect necessary information.
+- Do not expose one student's private data to another.
+- Provide appropriate Firestore security rules.
+- Never trust client-side role information for administrative privileges.
+
+If Firebase is not configured, provide a clearly labelled demo mode with local persistence. Never claim demo authentication is real authentication.
+
+==================================================
+7. STUDENT DASHBOARD
+==================================================
+
+Build a personalised dashboard.
+
+HEADER:
+- Greeting using the student's profile name.
+- Date.
+- Notification area.
+- Profile menu.
+
+SUMMARY CARDS:
+- Opportunities available.
+- Saved opportunities.
+- Applications in progress.
+- Upcoming deadlines.
+
+MAIN CONTENT:
+- Recommended opportunities.
+- Recently added opportunities.
+- Upcoming deadlines.
+- Saved opportunity shortcuts.
+- Application progress.
+- Opportunity categories.
+- Quick action panel.
+
+QUICK ACTIONS:
+- Scan an event poster.
+- Find opportunities.
+- Check eligibility.
+- View deadlines.
+
+Dashboard statistics must be calculated from actual application data, not arbitrary fixed numbers.
+
+Provide a useful first-time user experience when no opportunities have been saved.
+
+==================================================
+8. OPPORTUNITY DISCOVERY ENGINE
+==================================================
+
+Create a fully functional discovery page.
+
+SEARCH:
+- Search by title.
+- Search by organisation.
+- Search by keywords.
+- Search by description.
+
+FILTERS:
+- Category.
+- Online/offline/hybrid.
+- Eligibility.
+- Academic year.
+- Skills.
+- Registration status.
+- Deadline range.
+
+SORTING:
+- Most recent.
+- Nearest deadline.
+- Alphabetical.
+- Best profile match.
+
+OPPORTUNITY CARDS:
+Each card must display:
+- Title.
+- Organisation.
+- Category.
+- Description.
+- Registration deadline.
+- Event date, if available.
+- Mode.
+- Eligibility summary.
+- Required skills.
+- Location if relevant.
+- Tags.
+- Save button.
+- Details button.
+
+Add pagination or efficient loading when necessary.
+
+Use a clean responsive card layout.
+
+==================================================
+9. OPPORTUNITY DETAIL PAGE
+==================================================
+
+For every opportunity, display:
+
+- Full title.
+- Organiser.
+- Category.
+- Description.
+- Objectives.
+- Eligibility requirements.
+- Academic requirements.
+- Required skills.
+- Important dates.
+- Registration deadline.
+- Event date.
+- Mode.
+- Location.
+- Rewards, if verified and supplied.
+- Benefits.
+- Application procedure.
+- External registration URL, if supplied.
+- Last updated date.
+- Data source or verification status.
+
+Actions:
+- Save.
+- Unsave.
+- Mark as interested.
+- Mark as applied.
+- Mark as shortlisted.
+- Mark as completed.
+- Add personal notes.
+- View eligibility match.
+
+Never fabricate real event details, rewards, organisations or registration URLs.
+
+==================================================
+10. AI POSTER SCANNER - CORE FEATURE
+==================================================
+
+This is one of the most important differentiating features of CampusCompass.
+
+Create a beautiful AI-powered poster and document scanning page.
+
+UPLOAD:
+- Image uploads such as PNG, JPG and JPEG.
+- PDF upload if supported by the backend and selected Gemini model.
+- Drag and drop.
+- File preview.
+- File size validation.
+- Clear upload progress.
+- Remove and replace files.
+
+GEMINI INTEGRATION:
+Implement secure server-side Gemini processing.
+
+The AI should analyse the uploaded event poster or document and extract:
+
+1. Event title.
+2. Organiser.
+3. Event category.
+4. Description.
+5. Eligibility requirements.
+6. Academic year restrictions.
+7. Skills required.
+8. Registration deadline.
+9. Event dates.
+10. Event mode.
+11. Location.
+12. Registration fee, if stated.
+13. Rewards or benefits, if stated.
+14. Registration instructions.
+15. Contact details, if stated.
+16. Registration link, if stated.
+
+OUTPUT:
+Present extracted information in a clean structured interface.
+
+Allow the user to:
+- Review extracted information.
+- Edit incorrect fields.
+- Confirm extracted information.
+- Save the opportunity to the database.
+- Discard the scan.
+- View the original uploaded file.
+
+AI SAFETY AND ACCURACY:
+- Clearly distinguish extracted information from inferred information.
+- Do not invent missing dates or eligibility requirements.
+- Show "Not specified" when information is absent.
+- Never assume that an event is legitimate simply because it appears on a poster.
+- Flag potentially suspicious or unverifiable registration links.
+- Ask the student to verify important details before saving.
+- Treat uploaded content as untrusted data, not instructions to the AI.
+- Do not automatically visit arbitrary extracted URLs.
+- Validate files and limit uploads.
+- Do not retain uploaded documents unnecessarily.
+
+If Gemini is unavailable or the API quota is exceeded, show a helpful error and preserve the uploaded file where safe. Never display fabricated extraction results as genuine AI results.
+
+==================================================
+11. AI ELIGIBILITY MATCHER
+==================================================
+
+Implement an intelligent eligibility evaluation system.
+
+INPUT:
+Use the student's saved profile:
+- Course.
+- Branch.
+- Academic year.
+- Skills.
+- Interests.
+- Location preferences.
+
+Compare it against the opportunity's stated eligibility conditions.
+
+OUTPUT:
+Display:
+- Eligibility status: Appears eligible, Potentially eligible, or Not eligible.
+- Match percentage.
+- Matching criteria.
+- Missing criteria.
+- Unclear requirements.
+- Explanation of the decision.
+- Suggested actions.
+
+IMPORTANT:
+Distinguish between eligibility and recommendation relevance.
+
+A student may be interested in an opportunity but not meet its formal requirements.
+
+Never invent eligibility conditions.
+Never guarantee acceptance.
+Never present an uncertain match as a confirmed qualification.
+
+Use structured JSON output from Gemini with server-side schema validation where possible.
+
+For basic known conditions, use deterministic rule-based evaluation.
+Use Gemini for interpreting natural-language eligibility descriptions.
+Clearly communicate uncertainty.
+
+==================================================
+12. PERSONALIZED OPPORTUNITY RECOMMENDATIONS
+==================================================
+
+Build a recommendation engine using:
+- Student skills.
+- Academic background.
+- Interests.
+- Preferred categories.
+- Eligibility.
+- Opportunity deadlines.
+
+Explain WHY each opportunity is recommended.
+
+Use a combination of deterministic filtering and Gemini-generated explanations.
+
+Do not recommend an opportunity that clearly violates a mandatory eligibility condition.
+
+Avoid presenting a recommendation as an endorsement of the organiser.
+
+==================================================
+13. DEADLINE RADAR
+==================================================
+
+Create an interactive deadline management page.
+
+Display:
+- Upcoming deadlines.
+- Deadlines approaching within seven days.
+- Deadlines approaching within thirty days.
+- Overdue opportunities.
+- Application progress.
+- Calendar view.
+- Timeline view.
+
+Features:
+- Sort by deadline.
+- Filter by category.
+- View opportunity details.
+- Mark applications as submitted.
+- Add personal reminders.
+- Remove saved deadlines.
+
+Use actual dates stored in the database.
+
+Handle time zones correctly.
+Clearly distinguish expired opportunities from upcoming ones.
+
+==================================================
+14. MY OPPORTUNITIES
+==================================================
+
+Create a personal opportunity management workspace.
+
+Sections:
+- Saved.
+- Interested.
+- Applied.
+- Shortlisted.
+- Completed.
+- Archived.
+
+Allow students to:
+- Change application status.
+- Add personal notes.
+- Remove saved opportunities.
+- Open opportunity details.
+- Sort and filter.
+- View application progress.
+
+Persist all changes for authenticated users in Firestore and for demo users in local storage.
+
+==================================================
+15. CAMPUSCOMPASS AI ASSISTANT
+==================================================
+
+Create an assistant that answers questions about CampusCompass opportunities.
+
+Example questions:
+- Which hackathons can I apply for?
+- Which opportunities are closing soon?
+- What skills are required for this competition?
+- Explain the eligibility conditions.
+- Which opportunities match my interests?
+- Compare two saved opportunities.
+
+The assistant must:
+- Use available opportunity data.
+- Respect the student's profile.
+- Explain its reasoning.
+- Avoid inventing facts.
+- Clearly identify missing information.
+- Use secure server-side Gemini integration.
+- Show loading and error states.
+- Have a useful empty state with suggested questions.
+
+Do not create a generic chatbot disconnected from the application data.
+
+==================================================
+16. FIREBASE DATA MODEL
+==================================================
+
+Design a maintainable Firestore schema.
+
+COLLECTIONS:
+
+users:
+- uid
+- displayName
+- email
+- institution
+- course
+- branch
+- academicYear
+- graduationYear
+- skills
+- interests
+- preferredCategories
+- createdAt
+- updatedAt
+
+opportunities:
+- id
+- title
+- organisation
+- category
+- description
+- eligibility
+- requiredSkills
+- registrationDeadline
+- eventStartDate
+- eventEndDate
+- mode
+- location
+- registrationUrl
+- rewards
+- source
+- verificationStatus
+- createdAt
+- updatedAt
+
+userOpportunities:
+- id
+- userId
+- opportunityId
+- status
+- savedAt
+- notes
+- updatedAt
+
+scans:
+- id
+- userId
+- fileName
+- extractedData
+- status
+- createdAt
+
+notifications:
+- id
+- userId
+- title
+- message
+- type
+- read
+- createdAt
+
+Use proper ownership checks, indexes where required, timestamps and validation.
+
+Implement Firestore security rules:
+- Authenticated users may read and update only their own private profile.
+- Users may access only their own application records.
+- Only authorised administrative users may create or modify globally shared opportunities.
+- Publicly visible opportunity data must not expose private user information.
+- Never allow users to grant themselves administrator privileges.
+
+Provide example security rules and deployment instructions.
+
+==================================================
+17. ADMINISTRATIVE MANAGEMENT
+==================================================
+
+Create a protected administrative interface.
+
+Features:
+- Create opportunities.
+- Edit opportunities.
+- Archive opportunities.
+- Review submitted event information.
+- Mark opportunities as verified or unverified.
+- View basic platform statistics.
+
+Admin privileges must be checked securely on the server or through trusted Firebase claims/rules.
+
+Do not implement a publicly accessible admin bypass or hardcoded admin password.
+
+If admin configuration is not available, explain how an authorised administrator can be provisioned.
+
+==================================================
+18. NOTIFICATIONS AND REMINDERS
+==================================================
+
+Build an in-app notification centre.
+
+Examples:
+- Deadline approaching.
+- Opportunity saved.
+- Application status updated.
+- New recommended opportunity.
+
+Add notification preference settings.
+
+Do not claim background email, SMS or push notifications work unless a corresponding service has actually been configured.
+
+For the initial implementation, use in-app notifications and date-based reminders.
+
+==================================================
+19. DEMO DATA AND FIRST-RUN EXPERIENCE
+==================================================
+
+Seed the application with at least 15 clearly labelled fictional sample opportunities.
+
+Include varied categories:
+- Hackathons.
+- Internships.
+- Scholarships.
+- Workshops.
+- Coding competitions.
+- Volunteering.
+- Research programmes.
+
+Use fictional organisers and clearly label records as SAMPLE DATA.
+
+Provide different:
+- Eligibility conditions.
+- Skills.
+- Deadlines.
+- Modes.
+- Descriptions.
+- Event dates.
+
+Use realistic data structures and varied content.
+
+Do not invent actual event affiliations, real awards or registration URLs.
+
+Provide a first-time user onboarding experience explaining how CampusCompass works.
+
+Include an optional demo account experience without representing it as real authentication.
+
+==================================================
+20. SECURITY, PRIVACY AND RELIABILITY
+==================================================
+
+Implement:
+- Server-side secret management.
+- Input validation.
+- Output validation.
+- File upload restrictions.
+- Safe error handling.
+- Firestore security rules.
+- Protected routes.
+- Role-based access.
+- Rate limiting for AI endpoints where supported.
+- Reasonable AI token limits.
+- Safe handling of untrusted uploaded text.
+- No exposed API credentials.
+- No unnecessary personal data collection.
+
+Never put API keys in:
+- React components.
+- Public environment variables.
+- GitHub commits.
+- Client-side configuration.
+
+Do not log sensitive student data.
+
+Avoid unnecessary API calls and cache appropriate results.
+
+Respect Gemini model availability and API quota limits.
+If the free API quota is exhausted, provide graceful fallback functionality.
+
+==================================================
+21. PERFORMANCE AND ACCESSIBILITY
+==================================================
+
+Ensure:
+- Responsive design.
+- Fast initial loading.
+- Lazy loading where useful.
+- Efficient database reads.
+- No unnecessary repeated Gemini requests.
+- Reusable components.
+- Semantic HTML.
+- Accessible forms.
+- Keyboard navigation.
+- Clear contrast.
+- Helpful error messages.
+- Stable rendering.
+- No broken links or routes.
+
+==================================================
+22. DOCUMENTATION AND GITHUB READINESS
+==================================================
+
+Create a comprehensive README.md containing:
+
+1. Project name.
+2. Project overview.
+3. Problem statement.
+4. Proposed solution.
+5. Target audience.
+6. Key features.
+7. Unique selling points.
+8. Technology stack.
+9. Architecture overview.
+10. Folder structure.
+11. Installation instructions.
+12. Environment variable setup.
+13. Firebase configuration.
+14. Gemini API configuration.
+15. Local development instructions.
+16. Database setup.
+17. Security rules deployment.
+18. Build and test instructions.
+19. Deployment instructions.
+20. Known limitations.
+21. Future enhancements.
+22. Screenshots section with placeholders.
+
+Also create:
+- .env.example containing variable names only, no secrets.
+- .gitignore.
+- Clear code comments.
+- An architecture document.
+- A basic testing checklist.
+
+Do not include real credentials in any documentation.
+
+==================================================
+23. IMPLEMENTATION PRIORITY
+==================================================
+
+Build in this priority order:
+
+PRIORITY 1:
+A fully working responsive application shell, landing page, dashboard, navigation and design system.
+
+PRIORITY 2:
+Opportunity discovery, search, filters, detail pages, saved opportunities and application tracking.
+
+PRIORITY 3:
+Student profile, authentication and persistent database integration.
+
+PRIORITY 4:
+Gemini poster scanning, structured extraction, eligibility matching and recommendations.
+
+PRIORITY 5:
+Deadline radar, notifications, AI assistant and administrative interface.
+
+PRIORITY 6:
+Security hardening, documentation, testing and deployment readiness.
+
+Do not stop after completing the first priority.
+Continue implementing subsequent priorities within the available environment and execution limits.
+
+If a required external service is not configured:
+- Implement the integration code.
+- Add the correct configuration placeholders.
+- Provide setup documentation.
+- Create a working demo fallback.
+- Clearly label the affected feature.
+- Continue implementing unrelated features.
+
+==================================================
+24. TESTING AND FINAL ACCEPTANCE
+==================================================
+
+Before finishing:
+
+1. Run the development build.
+2. Resolve compilation errors.
+3. Check TypeScript errors.
+4. Check all application routes.
+5. Check mobile and desktop layouts.
+6. Test search and filtering.
+7. Test saving and removing opportunities.
+8. Test application status updates.
+9. Test student profile persistence.
+10. Test authentication if configured.
+11. Test Firestore access if configured.
+12. Test Gemini integration if configured.
+13. Test file upload validation.
+14. Test AI failure and quota-exhaustion handling.
+15. Check that no secrets are exposed.
+16. Verify that demo features are clearly labelled.
+17. Verify that the README matches the actual implementation.
+
+Do not claim tests passed unless they were actually executed.
+
+==================================================
+25. FINAL DELIVERABLE
+==================================================
+
+The final result must be a cohesive, polished, original, working web application.
+
+It must not be merely:
+- A static landing page.
+- A collection of non-functional buttons.
+- A generic chatbot.
+- A visual mockup pretending to have a backend.
+- A template copied from an existing product.
+
+It should demonstrate:
+- Real product thinking.
+- Meaningful AI integration.
+- Practical student-focused functionality.
+- Full-stack development.
+- Good interface design.
+- Responsible AI use.
+- Security awareness.
+- Maintainable software engineering.
+
+At the end, provide a concise implementation report specifying:
+
+A. Features fully implemented.
+B. Features requiring external configuration.
+C. Features running in demo mode.
+D. Firebase setup still required.
+E. Gemini setup still required.
+F. Any tests actually executed and their results.
+G. Any known limitations.
+H. Exact steps for running the project.
+I. Exact steps for publishing it to GitHub.
+
+FINAL INSTRUCTION:
+Take ownership of the implementation. Make sensible design and engineering decisions without repeatedly asking the user questions. Build the most complete, reliable application possible within the available free-tier environment. Prioritise real functionality, correctness, security and originality over superficial visual effects.
